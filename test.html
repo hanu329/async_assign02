@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+        .sts{
+            color:white;
+            background:red;
+            border:none;
+            margin:0px 15px;
+        }
+    </style>
+</head>
+
+<body>
+  <div id="test"></div>
+</body>
+
+</html>
+
+<script>
+
+   
+const reducer = (store, { type, payload }) => {
+        switch (type) {
+            case "Add_Count":
+                return { ...store, count: store.count + payload }
+                case "Add_Todo":
+                return { ...store, todo: [...store.todo, payload] }
+            default:
+                return store
+        }
+    }
+
+    class Store {
+        constructor(reducer, initState) {
+            this.reducer = reducer,
+                this.state = initState
+        }
+        getState() {
+            return this.state
+        }
+        dispatch(action) {
+            this.state = this.reducer(this.state, action)
+        }
+    }
+
+
+    let init_state = {
+        count: 0,
+        todo: []
+    }
+
+    let store = new Store(reducer, init_state)
+
+    
+
+    store.dispatch({
+        type: "Add_Todo",
+        payload: {title:"learn react", status:false}
+    })
+    store.dispatch({
+        type: "Add_Todo",
+        payload: {title:"go to shop", status:true}
+    })
+    // store.dispatch({
+    //     type: "Add_Todo",
+    //     payload: "mango"
+    // })
+
+    //console.log(store.getState().todo)
+
+    let todos= store.getState().todo;
+
+    todos.map(e=> {
+        let ttl=document.createElement("p")
+        ttl.innerText=e.title
+
+        let sts=document.createElement("button")
+        sts.innerText=e.status
+        sts.setAttribute("class", "sts")
+
+        let del= document.createElement("button")
+        del.innerText= "remove"
+        del.setAttribute("class", "rem")
+        ttl.append(sts , del)
+
+        document.getElementById("test").append(ttl)
+    })
+
+    let sts_el=document.getElementsByClassName("sts")
+
+    for(let i=0; i<sts_el.length; i++){
+        sts_el[i].addEventListener("click", ()=>{
+        let text= sts_el[i].innerText;
+        {text=="true"?sts_el[i].innerText="false":sts_el[i].innerText="true"}
+    })
+    }
+
+    
+    let rem_el=document.getElementsByClassName("rem")
+    //let new_rem_el= Array.prototype.slice.call(rem_el);
+
+   // console.log(rem_el[0])
+    for(let i=0; i<rem_el.length; i++){
+        rem_el[i].addEventListener("click", ()=>{ 
+            del_func(i)
+    
+    })
+    }
+
+    const del_func=(ind)=>{
+        rem_el[ind].parentElement.remove()
+    }
+
+</script>
